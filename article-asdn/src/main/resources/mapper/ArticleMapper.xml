@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.asdn.article.mapper.ArticleMapper">
+	<insert id="saveArticle" parameterType="Article">
+		insert into t_article(
+		article_id,
+		article_title,
+		article_abstract,
+		article_content,
+		article_type,
+		article_data
+		)values(
+		#{articleId},
+		#{articleTitle},
+		#{articleAbstract},
+		#{articleContent},
+		#{articleType},
+		#{articleData,jdbcType=TIMESTAMP}
+		)
+	</insert>
+
+	<insert id="saveUserIdAndArticleId">
+		insert into t_user_article
+		values(
+		#{userId},
+		#{articleId}
+		)
+	</insert>
+	<select id="queryarticle" resultType="Article">
+		select * from t_article
+			order by article_data DESC
+		limit #{start},#{rows} 
+	</select>
+	<select id="queryCount" resultType="int">
+		select count(article_id) from
+		t_article
+	</select>
+
+
+
+
+	<select id="findUserIdByArticleId" parameterType="String" resultType="String">
+		SELECT user_id FROM t_user_article
+		WHERE article_id=#{articleId}
+	</select>
+
+
+	<select id="findUserByArticleId" parameterType="String" resultType="User">
+		SELECT * FROM t_user
+		WHERE user_id=#{userId}
+	</select>
+	<select id="queryArticlePages" parameterType="String" resultType="int">
+		Select count(article_id) from t_article 
+	</select>
+	
+	
+	
+	<select id="findArticleById" parameterType="String" resultType="Article">
+		select * from t_article where article_id=#{articleId}
+	</select>
+
+
+
+
+
+
+	<select id="findId" parameterType="String" resultType="String">
+		SELECT user_id FROM t_user_article
+		WHERE article_id=#{articleId}
+	</select>
+
+
+	<select id="findUser" parameterType="String" resultType="User">
+		SELECT * FROM t_user
+		WHERE user_id in(
+			select user_id from t_user_article where article_id=#{articleId}
+		)
+
+
+	</select>
+	
+	
+	
+	<select id="findArticleByArticleId" parameterType="string" resultType="Article">
+		select * form t_article where article_id=#{articleId}
+	</select>
+	
+	<select id="queryarticle2" resultType="Article">
+		select * from t_article
+		limit #{start},#{rows}
+		where article_id in(
+			select article_id from t_user_article where user_id=#{userId}
+		)
+		order by article_data DESC
+	</select>
+	
+	<select id="queryArticleType" parameterType="string" resultType="Article">
+		select * from t_article where article_type=#{articleType}
+		limit ${start},${rows}
+	</select>
+	
+	<select id="queryPageByType" parameterType="String" resultType="int"> 
+		select count(article_id) from t_article where article_type=#{articleType}
+	</select>
+	
+	
+	<select id="queryHot" resultType="Article">
+		SELECT * FROM t_article  ORDER BY article_like DESC  LIMIT 10
+	</select>
+	
+	<delete id="deleteArticle" parameterType="string">
+		delete from t_article where article_id=#{articleId}
+	</delete>
+	
+	<delete id="deleteUserArticle" parameterType="string">
+		delete from t_user_article where article_id=#{articleId}
+	</delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

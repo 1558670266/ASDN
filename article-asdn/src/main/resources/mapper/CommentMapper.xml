@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.asdn.article.mapper.CommentMapper">
+
+	<insert id="saveComment" parameterType="com.asdn.article.pojo.Comment">
+
+		insert into t_comment(
+		comment_id,
+		comment_xuserid,
+		comment_text,
+		comment_date
+		)values(
+		#{commentId},
+		#{commentXuserid},
+		#{commentText},
+		#{commentDate,jdbcType=TIMESTAMP}
+		)
+	</insert>
+	<insert id="saveCommAndArticle" parameterType="String">
+		insert into t_article_comment(
+		article_id,
+		comment_id
+		)values(
+		#{articleId},
+		#{commentId}
+		)
+	</insert>
+
+	<select id="getCommentId" parameterType="String" resultType="String">
+		select comment_id from
+		t_article_comment
+		where article_id=#{articleId}
+	</select>
+
+	<select id="getComment" parameterType="String" resultType="com.asdn.article.pojo.Comment">
+		select
+		* from t_comment
+		where comment_id=#{commentId}
+	</select>
+	<select id="getUserInfo" parameterType="String" resultType="com.asdn.article.pojo.User">
+		select * from t_user
+		where user_id=#{userId}
+	</select>
+
+	<update id="saveZan"  >
+		update t_article set article_like=#{likes} where article_id=#{articleId}
+	</update>
+
+	<select id="getArticleLike" parameterType="String" resultType="int">
+		select article_like  from t_article where article_id=#{articleId}
+	</select>
+
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

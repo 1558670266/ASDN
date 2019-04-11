@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.asdn.backstage.mapper.UserMapper">
+	<select id="findByuserId" parameterType="string"
+		resultType="com.asdn.backstage.pojo.User">
+		select * from t_user where user_id=#{userId}
+	</select>
+	<select id="findByuserName" parameterType="string"
+		resultType="com.asdn.backstage.pojo.User">
+		select * from t_user where user_name=#{userName}
+	</select>
+
+	<!-- <select id="findByHot" parameterType="string" resultType="com.asdn.backstage.pojo.User"> 
+		SELECT * FROM t_user ORDER BY user_name </select> -->
+	<!-- <insert id="insertUser" parameterType="User"> insert into t_user( user_id, 
+		user_name, user_password, user_nickname, user_email, user_type ) values( 
+		#{userId}, #{userName}, #{userPassword}, #{userNickname}, #{userEmail}, #{userType} 
+		) </insert> <select id="checkLogin" parameterType="User" resultType="User"> 
+		select * from t_user where user_name=#{userName} and user_password=#{userPassword} 
+		</select> -->
+
+	<select id="findByHot1" resultType="User">
+		SELECT user_id FROM
+		t_user_article GROUP BY user_id
+	</select>
+
+	<select id="findByHot2" parameterType="string" resultType="Article">
+		SELECT article_id FROM t_user_article where user_id=#{userId}
+	</select>
+
+	<select id="findByHot3" parameterType="string" resultType="java.lang.Integer">
+		SELECT article_like FROM t_article where article_id=#{articleId}
+	</select>
+	<select id="findByHot4" parameterType="string" resultType="User">
+		SELECT
+		user_id,
+		user_name,
+		user_image,
+		user_realname
+		FROM t_user where
+		user_id=#{userId}
+	</select>
+	<select id="findArticleIdByUserId" parameterType="String"
+		resultType="String">
+		select article_id from t_user_article where
+		user_id=#{userId}
+	</select>
+	<resultMap type="com.asdn.backstage.pojo.User_article" id="orderId">
+		<id column="" property="id" />
+	</resultMap>
+	<select id="findArticleByTime" parameterType="String"
+		resultType="com.asdn.backstage.pojo.Article">
+		select * from t_article
+		where
+		article_id in(
+		select article_id
+		from t_user_article where user_id=#{userId}
+		)
+		order by article_data DESC
+	</select>
+
+
+	<select id="findArticleByUserId1" resultType="Article">
+		select * from
+		t_article where article_id in(
+		select article_id from t_collect
+		where
+		user_id=#{userId}
+		)
+		order by article_data DESC
+
+	</select>
+	<select id="findArticleByUserId2" resultType="Article">
+		select * from
+		t_article where article_id=#{article_id} order by article_data
+		desc
+	</select>
+	<insert id="saveArticle">
+		insert into t_collect values (#{userId},#{articleId})
+	</insert>
+	<select id="isSave" resultType="String">
+		select collect_article_id from
+		t_collect where collect_article_id=#{articleId} and
+		collect_user_id=#{userId}
+	</select>
+	
+	<select id="getMyCollectArticle" resultType="Article">
+		select * from t_article where article_id in(
+			select collect_article_id from t_collect where collect_user_id=#{userId}
+		)
+		order by article_id DESC
+	</select>
+	<select id="findUserByArticleId" parameterType="String" resultType="User">
+		select * from t_user where user_id in(
+		 	select user_id from t_user_article where article_id=#{articleId}
+		)
+	</select>
+	
+	<delete id="deleteMyCollect" parameterType="String">
+	 	delete from t_collect where collect_user_id=#{userId} and collect_article_id=#{articleId} 
+	</delete>
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
