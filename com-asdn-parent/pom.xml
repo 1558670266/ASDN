@@ -36,7 +36,7 @@
 		<dependency>
 			<groupId>org.elasticsearch</groupId>
 			<artifactId>elasticsearch</artifactId>
-			<version>5.5.2</version>
+			<version>6.8.15</version>
 		</dependency>
 		<!-- 系统通信的工具之一，发起代码内部的通信 -->
 		<dependency>
